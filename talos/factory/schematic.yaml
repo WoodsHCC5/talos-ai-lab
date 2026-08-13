@@ -1,0 +1,17 @@
+# Image Factory schematic.
+# Content-addressable: POST this file, get back a schematic ID, then download
+# ISO / installer for any Talos version with that ID.
+#
+#   ./hack/factory-schematic.sh
+#   # or
+#   curl -fsS -X POST --data-binary @talos/factory/schematic.yaml \
+#     https://factory.talos.dev/schematics
+#
+# Use the *production* NVIDIA extensions. Driver version is bound to the Talos
+# release — bump both extensions together when you upgrade Talos.
+# Docs: https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/hardware-and-drivers/nvidia-gpu-proprietary
+customization:
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/nonfree-kmod-nvidia-production
+      - siderolabs/nvidia-container-toolkit-production

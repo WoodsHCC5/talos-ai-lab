@@ -1,0 +1,25 @@
+# Week 4. Leave suspended until LiteLLM is answering.
+#   make unsuspend-agents && git commit && git push
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-agents
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 2m
+  timeout: 20m
+  prune: true
+  wait: false
+  suspend: true
+  dependsOn:
+    - name: apps-inference
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./apps/agents
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: lab-config
+        optional: true

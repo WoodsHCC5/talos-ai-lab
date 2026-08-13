@@ -1,0 +1,12 @@
+# Flux bootstrap --path=clusters/lab reconciles this kustomization.
+# After `flux bootstrap`, the flux-system/ directory is generated in place
+# and must be listed first so Flux can self-manage.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - flux-system
+  - infra.yaml
+  - apps-platform.yaml
+  - apps-inference.yaml
+  - apps-agents.yaml
+  - apps-agents-workloads.yaml

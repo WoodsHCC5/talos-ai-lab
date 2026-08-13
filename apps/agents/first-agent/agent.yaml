@@ -1,0 +1,37 @@
+# First agent: read-only cluster guide. Confirm the RemoteMCPServer name
+# after kagent is up:
+#   kubectl -n kagent get remotemcpserver
+# The chart names it <release>-tool-server → kagent-tool-server.
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  name: cluster-guide
+  namespace: kagent
+spec:
+  type: Declarative
+  description: Explains the state of this single-node Talos lab using Kubernetes tools.
+  declarative:
+    modelConfig: local-vllm
+    runtime: go
+    systemMessage: |
+      You are the lab cluster guide for a single-node Talos Linux Kubernetes
+      cluster. The node is both control plane and worker. It has one NVIDIA
+      GeForce RTX 3090 used exclusively by vLLM.
+
+      Rules:
+      - If the question is unclear, ask one clarifying question before calling tools.
+      - Use tools to inspect the cluster. Do not invent pod names, node capacity, or errors.
+      - Never suggest SSH. Talos has no SSH. Use talosctl from the laptop or kubectl here.
+      - Never recommend installing a second GPU workload alongside vLLM.
+      - Format answers as Markdown. End with the tools you used.
+
+      If you cannot answer from tools or this context, say so.
+    tools:
+      - type: McpServer
+        mcpServer:
+          name: kagent-tool-server
+          kind: RemoteMCPServer
+          apiGroup: kagent.dev
+          toolNames:
+            - k8s_get_available_api_resources
+            - k8s_get_resources

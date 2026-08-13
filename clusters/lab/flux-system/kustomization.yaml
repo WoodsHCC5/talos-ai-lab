@@ -1,0 +1,5 @@
+# Placeholder so the parent kustomization is valid before `flux bootstrap`.
+# Bootstrap replaces this directory with gotk-components.yaml + gotk-sync.yaml.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: []

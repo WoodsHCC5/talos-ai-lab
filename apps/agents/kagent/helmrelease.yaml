@@ -1,0 +1,44 @@
+# Points kagent at the local LiteLLM front door, not at a cloud API.
+# Bundled Postgres is fine for a single-node lab. Disable demo agents so the
+# first Agent CR you apply is one you can read.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kagent
+  namespace: kagent
+spec:
+  interval: 30m
+  timeout: 10m
+  dependsOn:
+    - name: kagent-crds
+      namespace: kagent
+  chartRef:
+    kind: OCIRepository
+    name: kagent
+    namespace: flux-system
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  values:
+    providers:
+      default: openAI
+      openAI:
+        provider: OpenAI
+        model: lab
+        apiKeySecretRef: kagent-local
+        apiKeySecretKey: OPENAI_API_KEY
+        config:
+          baseURL: http://litellm.inference.svc.cluster.local:4000/v1
+    grafana-mcp:
+      enabled: false
+    querydoc:
+      enabled: false
+    kagent-tools:
+      enabled: true
+    database:
+      postgres:
+        bundled:
+          enabled: true
+          storage: 5Gi
+          storageClassName: local-path

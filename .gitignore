@@ -1,0 +1,20 @@
+# Local machine facts and generated Talos secrets
+lab.env
+talos/generated/
+*.talosconfig
+kubeconfig
+talosconfig
+
+# Secrets that must never be committed
+**/*secret*.yaml
+!**/*.example.yaml
+!**/*secret.example.yaml
+*.pem
+*.key
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+.direnv/

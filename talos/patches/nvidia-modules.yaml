@@ -1,0 +1,17 @@
+# Load the proprietary NVIDIA modules that the Factory extensions placed on disk.
+# Apply to any node that has the 3090.
+#
+# Confirm:
+#   talosctl -n $CONTROL_PLANE_IP read /proc/modules | grep nvidia
+#   talosctl -n $CONTROL_PLANE_IP read /proc/driver/nvidia/version
+#   talosctl -n $CONTROL_PLANE_IP get extensions
+machine:
+  kernel:
+    modules:
+      - name: nvidia
+      - name: nvidia_uvm
+      - name: nvidia_drm
+      - name: nvidia_modeset
+  sysctls:
+    # Required on some Talos + Cilium + NVIDIA combinations.
+    net.core.bpf_jit_harden: "1"

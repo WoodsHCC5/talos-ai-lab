@@ -1,0 +1,65 @@
+# Slim kube-prometheus-stack. You want metrics *before* the first model OOM.
+# Grafana: kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:80
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: monitoring
+spec:
+  interval: 30m
+  timeout: 15m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: 75.15.1
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+  values:
+    alertmanager:
+      enabled: false
+    grafana:
+      enabled: true
+      admin:
+        existingSecret: ""
+      persistence:
+        enabled: true
+        size: 5Gi
+        storageClassName: local-path
+      defaultDashboardsTimezone: browser
+    prometheus:
+      prometheusSpec:
+        retention: 7d
+        replicas: 1
+        resources:
+          requests:
+            cpu: 200m
+            memory: 2Gi
+          limits:
+            memory: 6Gi
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 40Gi
+    prometheusOperator:
+      admissionWebhooks:
+        failurePolicy: Ignore
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeEtcd:
+      enabled: false
+    kubeProxy:
+      enabled: false

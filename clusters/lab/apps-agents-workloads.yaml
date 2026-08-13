@@ -1,0 +1,19 @@
+# Applied after kagent CRDs + controller are in the cluster.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-agents-workloads
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 2m
+  timeout: 5m
+  prune: true
+  wait: false
+  suspend: true
+  dependsOn:
+    - name: apps-agents
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./apps/agents-workloads

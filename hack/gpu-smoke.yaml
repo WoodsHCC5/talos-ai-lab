@@ -1,0 +1,22 @@
+# Manual CUDA smoke test. Apply after `kubectl describe node` shows nvidia.com/gpu: 1.
+#   kubectl apply -f hack/gpu-smoke.yaml
+#   kubectl -n inference wait --for=condition=complete job/gpu-smoke --timeout=180s
+#   kubectl -n inference logs job/gpu-smoke
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gpu-smoke
+  namespace: inference
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      runtimeClassName: nvidia
+      containers:
+        - name: vectoradd
+          image: nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda12.5.0
+          resources:
+            limits:
+              nvidia.com/gpu: "1"

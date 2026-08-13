@@ -1,0 +1,18 @@
+# Extra ModelConfig in case you want to select it from the UI independently
+# of the chart-generated default. Same backend: LiteLLM → vLLM.
+#
+# Create the secret first (not committed):
+#   kubectl -n kagent create secret generic kagent-local \
+#     --from-literal=OPENAI_API_KEY=sk-lab
+apiVersion: kagent.dev/v1alpha3
+kind: ModelConfig
+metadata:
+  name: local-vllm
+  namespace: kagent
+spec:
+  provider: OpenAI
+  model: lab
+  apiKeySecret: kagent-local
+  apiKeySecretKey: OPENAI_API_KEY
+  openAI:
+    baseURL: http://litellm.inference.svc.cluster.local:4000/v1

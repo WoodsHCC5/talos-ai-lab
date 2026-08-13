@@ -1,0 +1,23 @@
+# Week 2. Controllers and cluster-wide config.
+# Depends on nothing except Flux itself. Cilium is already running from the
+# bootstrap script; this HelmRelease adopts that release.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 2m
+  timeout: 10m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: lab-config
+        optional: true

@@ -1,0 +1,29 @@
+# User volumes on the two HDDs. Talos mounts them at /var/mnt/<name> and
+# propagates that path into the kubelet, so hostPath + subPath work.
+#
+# generate.sh substitutes the serials from lab.env.
+# Discover serials:
+#   talosctl -n $CONTROL_PLANE_IP get disks -o yaml
+#
+# Do not select by /dev/sda — device names move across reboots.
+# The disk selector must match exactly one disk.
+#
+# NVMe is the system disk (etcd, containerd). Do not put these volumes there.
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-path
+provisioning:
+  diskSelector:
+    match: disk.serial == '${DISK_SERIAL_LOCAL_PATH}'
+  minSize: 200GB
+  grow: true
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: models
+provisioning:
+  diskSelector:
+    match: disk.serial == '${DISK_SERIAL_MODELS}'
+  minSize: 200GB
+  grow: true

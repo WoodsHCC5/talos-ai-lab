@@ -1,0 +1,39 @@
+# Device plugin only. Drivers and the container toolkit live in Talos
+# system extensions — do not install the NVIDIA GPU Operator driver/toolkit
+# DaemonSets on Talos (read-only root, no unsigned modules).
+#
+# Alternative (Talos 1.13+): GPU Operator v26.3.1+ with
+#   driver.enabled=false toolkit.enabled=false hostPaths.driverInstallDir=/usr/local
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nvidia-device-plugin
+  namespace: nvidia
+spec:
+  interval: 30m
+  timeout: 5m
+  chart:
+    spec:
+      chart: nvidia-device-plugin
+      version: "0.17.1"
+      sourceRef:
+        kind: HelmRepository
+        name: nvdp
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    runtimeClassName: nvidia
+    compatWithCPUManager: false
+    gfd:
+      enabled: true
+    nfd:
+      enabled: true
+    # One physical 3090. Do not enable time-slicing until you have finished
+    # the exclusive-vLLM week. See docs/04-inference.md.
+    config:
+      name: ""

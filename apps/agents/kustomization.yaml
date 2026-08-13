@@ -1,0 +1,6 @@
+# Controllers and CRDs only. Custom resources live in ../agents-workloads
+# so Flux does not apply Agents before the CRDs exist.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - kagent

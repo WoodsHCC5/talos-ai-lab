@@ -1,0 +1,11 @@
+# Applied at `talosctl gen config` time.
+# Cilium replaces both Flannel and kube-proxy. After bootstrap the node will
+# sit at "retrying error: node not ready" until Cilium is installed — that is
+# expected. You have ~10 minutes. See docs/02-bootstrap-cluster.md.
+cluster:
+  allowSchedulingOnControlPlanes: true
+  network:
+    cni:
+      name: none
+  proxy:
+    disabled: true
