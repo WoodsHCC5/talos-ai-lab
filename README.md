@@ -7,10 +7,9 @@ It is written for this hardware:
 | Piece | Role |
 | --- | --- |
 | Intel Core i9-10980XE (18c/36t) | control plane + embeddings + agents |
-| 256 GB RAM | cluster services + huge page cache for model files |
+| 256 GB RAM | cluster services + agent sandboxes + model load headroom |
 | NVIDIA GeForce RTX 3090 (24 GB) | exclusive vLLM |
-| NVMe (buy one if you do not have it) | Talos, etcd, containerd |
-| 2× 4 TB HDD | PVCs and model weights |
+| 2× 4 TB NVMe | install + PVCs on disk 1; model weights on disk 2 |
 
 This is a **server**, not a desktop. Talos has no GUI and no SSH. You operate it from a laptop with `talosctl` and `kubectl`.
 
@@ -60,8 +59,8 @@ Flux Kustomizations for inference and agents start with `spec.suspend: true`. Th
 
 ## Path through the repo
 
-1. Read [docs/00-hardware.md](docs/00-hardware.md) and buy the NVMe if you do not have one.
-2. Copy `lab.env.example` → `lab.env` and fill in IPs / disk serials.
+1. Read [docs/00-hardware.md](docs/00-hardware.md) for the two-NVMe layout.
+2. Copy `lab.env.example` → `lab.env` and fill in IPs / the models-disk serial.
 3. [docs/01-boot-talos.md](docs/01-boot-talos.md) — Factory ISO, install, GPU modules.
 4. [docs/02-bootstrap-cluster.md](docs/02-bootstrap-cluster.md) — Cilium in the 10-minute window, first GPU smoke test.
 5. [docs/03-gitops.md](docs/03-gitops.md) — `flux bootstrap` against this repo.

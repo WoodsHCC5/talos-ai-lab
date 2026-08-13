@@ -1,5 +1,5 @@
-# Puts PVCs on the HDD user volume /var/mnt/local-path, not on the NVMe
-# EPHEMERAL partition. Models do not use this class — they bind to /var/mnt/models.
+# Puts PVCs on the install-NVMe leftover (/var/mnt/local-path), not on
+# the 1 TB EPHEMERAL partition. Models bind to /var/mnt/models on NVMe 2.
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:

@@ -22,11 +22,10 @@ set +a
 : "${TALOS_VERSION:?}"
 : "${KUBERNETES_VERSION:?}"
 : "${INSTALL_DISK:?}"
-: "${DISK_SERIAL_LOCAL_PATH:?}"
 : "${DISK_SERIAL_MODELS:?}"
 
-if [[ "$DISK_SERIAL_LOCAL_PATH" == REPLACE_* || "$DISK_SERIAL_MODELS" == REPLACE_* ]]; then
-  echo "Set DISK_SERIAL_LOCAL_PATH and DISK_SERIAL_MODELS in lab.env first." >&2
+if [[ "$DISK_SERIAL_MODELS" == REPLACE_* ]]; then
+  echo "Set DISK_SERIAL_MODELS in lab.env first (serial of the non-install NVMe)." >&2
   echo "  talosctl -n $CONTROL_PLANE_IP get disks -o yaml" >&2
   exit 1
 fi
@@ -47,7 +46,7 @@ python3 - "${ROOT}/talos/patches/volumes.yaml" "${WORKDIR}/volumes.yaml" <<'PY'
 import os, sys
 src, dst = sys.argv[1], sys.argv[2]
 text = open(src).read()
-for key in ("DISK_SERIAL_LOCAL_PATH", "DISK_SERIAL_MODELS"):
+for key in ("DISK_SERIAL_MODELS",):
     text = text.replace("${" + key + "}", os.environ[key])
 open(dst, "w").write(text)
 PY

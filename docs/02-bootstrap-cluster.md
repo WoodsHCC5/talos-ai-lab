@@ -54,7 +54,7 @@ You want `nvidia.com/gpu: 1` and `Test PASSED` in the job logs.
 
 ## 4. Do not install these
 
-- Longhorn or Rook — one node, two HDDs.
+- Longhorn or Rook — one node, two NVMe. Distributed block storage teaches the wrong lesson here.
 - NVIDIA GPU Operator **drivers** — already on the host via extensions.
 - Ollama — week 3 is vLLM. Two runtimes on one 3090 is a scheduling lesson you do not need yet.
 

@@ -4,7 +4,7 @@ Goal: a Talos node with NVIDIA modules loaded and two user volumes mounted. Kube
 
 ## 1. Laptop tools
 
-Install `talosctl` **matching** `TALOS_VERSION` in `versions.env` (currently v1.13.8), plus `kubectl`, `helm`, `jq`, `curl`, `envsubst` (gettext).
+Install `talosctl` **matching** `TALOS_VERSION` in `versions.env` (currently v1.13.8), plus `kubectl`, `helm`, `jq`, `curl`, and `python3`.
 
 ```bash
 curl -sL https://talos.dev/install | sh
@@ -17,7 +17,7 @@ talosctl version --client
 cp lab.env.example lab.env
 ```
 
-You will not know disk serials until step 5. You **do** need `CONTROL_PLANE_IP` (the address the box will have after install — set a DHCP reservation) and `INSTALL_DISK` (`/dev/nvme0n1` if you bought the NVMe).
+You will not know the models-disk serial until step 5. You **do** need `CONTROL_PLANE_IP` (the address the box will have after install — set a DHCP reservation) and `INSTALL_DISK` (the NVMe Talos should own, usually `/dev/nvme0n1`).
 
 ## 3. Build the Factory ISO
 
@@ -39,7 +39,7 @@ talosctl --insecure -n "$CONTROL_PLANE_IP" get disks -o yaml
 talosctl --insecure -n "$CONTROL_PLANE_IP" get pcidevices | grep -i nvidia
 ```
 
-Put the HDD serials into `lab.env`. Confirm `INSTALL_DISK` is the NVMe, not an HDD.
+Put the **non-install** NVMe serial into `DISK_SERIAL_MODELS`. Confirm `INSTALL_DISK` is the other NVMe — that disk gets Talos, EPHEMERAL (capped at 1 TB), and `local-path`.
 
 ## 5. Generate and apply machine config
 

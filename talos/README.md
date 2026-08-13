@@ -9,7 +9,7 @@ This directory is **not** reconciled by Flux. Talos is the OS. You apply it with
 | `factory/schematic.yaml` | Image Factory customization: NVIDIA production kernel modules + container toolkit |
 | `patches/cluster.yaml` | CNI none, kube-proxy off, schedule on the control plane |
 | `patches/nvidia-modules.yaml` | Load `nvidia`, `nvidia_uvm`, `nvidia_drm`, `nvidia_modeset` |
-| `patches/volumes.yaml` | User volumes `local-path` and `models` on the two HDDs |
+| `patches/volumes.yaml` | Cap EPHEMERAL; `local-path` on leftover install NVMe; `models` on the second NVMe |
 | `generate.sh` | `talosctl gen config` into `generated/` (gitignored) |
 
 The NVIDIA container toolkit extension already registers the `nvidia` containerd runtime. Kubernetes workloads opt in with `runtimeClassName: nvidia`. We do **not** make NVIDIA the default CRI runtime, so CoreDNS and etcd never accidentally pull in GPU libraries.
