@@ -33,6 +33,8 @@ spec:
       labels:
         app: vllm
     spec:
+      # Service "vllm" would inject VLLM_PORT=tcp://... and crash the engine.
+      enableServiceLinks: false
       runtimeClassName: nvidia
       containers:
         - name: vllm
