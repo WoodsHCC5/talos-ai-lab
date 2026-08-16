@@ -64,6 +64,10 @@ spec:
         enabled: true
       ui:
         enabled: true
+    # Without this, pods get EPERM connecting to kubernetes ClusterIP
+    # (10.96.0.1:443) under kube-proxy replacement. Flux then crashloops.
+    socketLB:
+      hostNamespaceOnly: true
     l2announcements:
       enabled: true
     externalIPs:
