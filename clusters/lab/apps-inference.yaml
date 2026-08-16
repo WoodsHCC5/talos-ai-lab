@@ -11,7 +11,7 @@ spec:
   timeout: 20m
   prune: true
   wait: false
-  suspend: true
+  suspend: false
   dependsOn:
     - name: apps-platform
   sourceRef:
