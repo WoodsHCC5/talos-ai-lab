@@ -30,6 +30,28 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    # A listener hostname matches one name and no more: `lab.home.arpa` above
+    # does not match `vllm.lab.home.arpa`, so every subdomain route was
+    # attaching to the HTTP listener only and was reachable over plain HTTP.
+    #
+    # A second listener rather than widening the first, because `*` matches
+    # exactly one label: `*.lab.home.arpa` would not cover the bare
+    # `lab.home.arpa`. Keeping both means nothing that works today stops
+    # working.
+    #
+    # Same certificate: lab-gateway-tls already carries both names.
+    - name: https-wildcard
+      protocol: HTTPS
+      port: 443
+      hostname: "*.lab.home.arpa"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: lab-gateway-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: All
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
