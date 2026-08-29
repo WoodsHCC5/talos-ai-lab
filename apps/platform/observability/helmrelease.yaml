@@ -29,6 +29,14 @@ spec:
       enabled: true
       admin:
         existingSecret: ""
+      # busybox init-chown-data cannot chown the PVC on Talos after an
+      # unclean XFS recovery (Permission denied on png/csv/pdf).
+      initChownData:
+        enabled: false
+      securityContext:
+        runAsUser: 472
+        runAsGroup: 472
+        fsGroup: 472
       persistence:
         enabled: true
         size: 5Gi

@@ -31,6 +31,14 @@ Select NVMe 2 by **serial**, not `/dev/nvme1n1`. Two identical NVMe devices can 
 - The 10980XE is PCIe 3.0. The 3090 is PCIe 4.0. Two NVMe drives plus the GPU fit in the lane budget. Inference is almost never lane-bound.
 - Consumer GeForce: CUDA works. NVIDIA AI Enterprise / vGPU / MIG do not. That is fine.
 
+## Firmware (do not skip)
+
+This board is an MSI Creator X299 (MS-7B96). **BIOS 1.30 (2020-05-29) is too old** to run a 10980XE + 3090 under Talos. The kernel logs `Running old microcode`; the node then hard-freezes (no ping, no panic dump) minutes after vLLM loads the GPU, and also after days of idle with a resident model.
+
+Flash **7B96v14** from [MSI support](https://www.msi.com/Motherboard/Creator-X299/support) (changelog: "Update MicroCode"). Then: C-states C1/C2 only or C6/C7 off, ASPM Disabled, Above 4G Decoding Enabled.
+
+Talos extra kernel args `intel_idle.max_cstate=1 processor.max_cstate=1 pcie_aspm=off` are in `talos/patches/nvidia-modules.yaml` as a backup. They apply on the next reboot/upgrade. vLLM stays at `replicas: 0` until the box survives without the GPU.
+
 ## This is not a desktop
 
 Talos has no GUI, no package manager, no SSH. After install, you sit at a laptop.

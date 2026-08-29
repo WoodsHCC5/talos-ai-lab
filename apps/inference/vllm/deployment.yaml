@@ -1,6 +1,10 @@
 # Exclusive owner of the 3090. Do not schedule a second nvidia.com/gpu: 1
 # pod while this is Running.
 #
+# replicas: 0 is a diagnostic hold. The 3090 + BIOS 1.30 hard-freezes the
+# node shortly after this pod loads the GPU (observed 2026-08-23 and 2026-08-29).
+# Set back to 1 after flashing MSI BIOS 7B96v14 and confirming the box stays up.
+#
 # Default model is 7B AWQ so the first boot succeeds. Switch MODEL to a 32B
 # AWQ/GPTQ instruct checkpoint once smoke tests pass. See docs/04-inference.md.
 apiVersion: v1
@@ -22,7 +26,7 @@ metadata:
   name: vllm
   namespace: inference
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:

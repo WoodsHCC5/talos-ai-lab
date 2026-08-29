@@ -15,3 +15,11 @@ machine:
   sysctls:
     # Required on some Talos + Cilium + NVIDIA combinations.
     net.core.bpf_jit_harden: "1"
+  # Takes effect on next upgrade/reboot. Stops the 10980XE entering C6/C7
+  # and the 3090's PCIe link from parking. BIOS 1.30 ships old microcode
+  # and that combination hard-freezes the box. Flash 7B96v14 as well.
+  install:
+    extraKernelArgs:
+      - intel_idle.max_cstate=1
+      - processor.max_cstate=1
+      - pcie_aspm=off

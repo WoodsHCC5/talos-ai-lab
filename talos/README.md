@@ -8,7 +8,7 @@ This directory is **not** reconciled by Flux. Talos is the OS. You apply it with
 | --- | --- |
 | `factory/schematic.yaml` | Image Factory customization: NVIDIA production kernel modules + container toolkit |
 | `patches/cluster.yaml` | CNI none, kube-proxy off, schedule on the control plane |
-| `patches/nvidia-modules.yaml` | Load `nvidia`, `nvidia_uvm`, `nvidia_drm`, `nvidia_modeset` |
+| `patches/nvidia-modules.yaml` | Load NVIDIA modules; cap C-states and disable PCIe ASPM |
 | `patches/volumes.yaml` | Cap EPHEMERAL; `local-path` on leftover install NVMe; `models` on the second NVMe |
 | `generate.sh` | `talosctl gen config` into `generated/` (gitignored) |
 

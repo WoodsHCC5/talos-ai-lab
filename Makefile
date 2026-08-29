@@ -52,6 +52,7 @@ flux-check:
 unsuspend-inference:
 	@sed -i 's/suspend: true/suspend: false/' clusters/lab/apps-inference.yaml
 	@echo "Unsuspended inference. Commit and push, or: flux reconcile ks flux-system --with-source"
+	@echo "vLLM is replicas: 0 until the freeze diagnostic is over. Set it back to 1 in apps/inference/vllm/deployment.yaml after BIOS 7B96v14."
 
 unsuspend-agents:
 	@sed -i 's/suspend: true/suspend: false/' clusters/lab/apps-agents.yaml
